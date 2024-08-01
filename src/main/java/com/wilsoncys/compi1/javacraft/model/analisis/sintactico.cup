@@ -1,0 +1,224 @@
+package com.wilsoncys.compi1.javacraft.model.analisis;
+
+
+//importaciones
+import java_cup.runtime.Symbol;
+import java.util.LinkedList;
+import com.wilsoncys.compi1.javacraft.model.excepciones.Errores;
+
+
+    // import com.wilsoncys.compi1.javacraft.model.asbtracto.Instruction;
+// import com.wilsoncys.compi1.javacraft.model.simbolo.*;
+// import com.wilsoncys.compi1.javacraft.model.instrucciones.*;
+// import com.wilsoncys.compi1.javacraft.model.expresiones.*;
+
+// import com.wilsoncys.compi1.javacraft.model.expresiones.Aritmeticas.*;
+// import com.wilsoncys.compi1.javacraft.model.expresiones.Enums.*;
+// import java.util.HashMap;
+
+
+// parser
+parser code
+{:
+    scanner s;
+    parser(scanner s){this.s = s;}
+
+//     public LinkedList<Errores> listaErrores = new LinkedList<>();
+    
+//     public void syntax_error(Symbol s){
+//         listaErrores.add(new Errores("SINTACTICO RECUPERABLE",
+//                         "No se esperaba el componente "+s.value,
+//                         s.left,
+//                         s.right));
+//     }
+
+//     public void unrecovered_syntax_error (Symbol s){
+//         listaErrores.add(new Errores("SINTACTICO NO RECUPERABLE",
+//                         "No se esperaba el componente "+s.value,
+//                         s.left,
+//                         s.right));
+//     }
+
+    public void syntax_error(Symbol s){
+        System.out.println("Error Sintactico en la linea " +
+        (s.left) + " y columna " + (s.right) +
+        ". No se esperaba el componente: " + (s.value) + ".");
+    }
+
+    public void unrecovered_syntax_error (Symbol s){
+        System.out.println("Error Sintactico no recuperable en la linea" +
+        (s.left) + " y columna " + (s.right) +
+        ". No se esperaba el componente: " + (s.value) + ".");
+    }
+
+
+:}
+
+action code
+{:
+:}
+
+//terminales
+terminal String CADENA, BOOL, CHARAC, ENTERO, DECIMAL, ID;
+terminal PLUS, MINUS, TIMES, DIVIDED, RAISED, MOD;
+terminal GREATER, LESS, G_EQUALS, L_EQUALS, EQUALS, DIFFERENT;
+terminal ASSIGNMENT;
+terminal DO, IF, ELSE, FOR, BREAK, MATCH, WHILE, CONTINUE, DEFAULT, ARROW;
+
+terminal CEROO, UNNO;
+terminal OR, AND, XOR, NOT;
+terminal UNEGATIVE, UMINUS, CAST;
+terminal PLUSPLUS, MINUSMINUS;
+
+terminal PRINT, INT, DOUBLE, BOOLEAN, CHAR, STRING, VOID;
+terminal PAREN_OPEN, PAREN_CLOSE, KEY_OPEN, KEY_CLOSE, SEMICOLON, POINTS, BRACK_L, BRACK_R;
+terminal VAR, CONST, COLON, START_W, LIST, NEW, DOT, APPEND, REMOVE, LENGTH, FIND, ROUND;
+terminal RETURN, STRUCT, TUSTRIN;
+
+
+
+//no terminales
+nonterminal LinkedList<Instruction> INICIO, InstructionES;
+nonterminal Instruction Instruction, EXPRESION;
+nonterminal Instruction declaracion, asignacion, increaseDecrease;
+nonterminal Boolean mutabilidad;
+// nonterminal Relational_LogicalOperations operador, logical;
+nonterminal Tipo typeVar, varCasteo;
+nonterminal Instruction print, while, do, for, match;
+nonterminal Instruction if, simpleIf, elsees, declaraAsigna, updateVarFor;
+nonterminal LinkedList<Instruction> cierreElse, valoresVectorAlone;
+nonterminal LinkedList<CaseMatch>  listCases;
+nonterminal CaseMatch case;
+nonterminal Instruction continue, break, start_whit, methodd;
+nonterminal Instruction declaracionEstructuraD;
+nonterminal LinkedList<LinkedList<Instruction>>  valoresVector2D;
+nonterminal LinkedList<HashMap>  parametersFuncts, paramsStructs, valuesStruct;
+nonterminal LinkedList<Instruction>  callsParameters;
+nonterminal Instruction append, call, returnn, callEXP, struct;
+nonterminal structsTypes;
+nonterminal Node ALGO, C,  D, B, ini;
+
+
+
+
+start with ini;
+ ini::=  C {:  :}
+ ;
+
+C::=     B:b  {: System.out.println("ultimo: " + b.dec); :} 
+  |B:b COLON C:a  {: System.out.println("decimal: "  + b.dec); :} 
+;
+
+// { B.exp = B1.exp+1; B.dec  = B1.dec + D.val * 2^B1.exp;}
+B::= D:d  {:   :} B:bb   {: RESULT = new Node();   RESULT.exp = bb.exp+1;
+                                        //   System.out.println("Expss(res,bb)");  
+                                        //   System.out.println(RESULT.exp);  
+                                        //   System.out.println(bb.exp);  
+
+                                        //   System.out.println("bb.dec" + bb.dec);  
+                                         RESULT.dec = bb.dec + (d.valor * (int)(Math.pow(2, bb.exp)));
+                                        //   System.out.println("deccccc");  
+                                        //   System.out.println("result.dec"  + RESULT.dec);  
+                                        //   System.out.println("bb.dec" + bb.dec);  
+    	                                                                    :}
+
+    |D:d  {: RESULT =d;  RESULT.exp = 1; RESULT.dec = RESULT.valor;  :}
+;
+
+D::= CEROO:a  {:  RESULT = new Node(); RESULT.valor = Integer.valueOf(a.toString()); :}
+    | UNNO:a {:    RESULT = new Node(); RESULT.valor = Integer.valueOf(a.toString()); :}	
+    ;
+
+
+
+
+
+
+//  ini::=  C {:  :}
+//  ;
+
+// C::=   B:b COLON C:a  {: System.out.println("decimal: "  + b.dec); :} 
+//     | B:b  {: System.out.println("ultimo: " + b.dec); :} 
+// ;
+
+// B::= D:d  {:   :} B:bb   {: RESULT = new Node();   RESULT.exp = bb.exp+1;
+//                                          RESULT.dec = bb.dec + (d.valor * (int)(Math.pow(2, bb.exp))); :}
+
+//     |D:d  {: RESULT =d;  RESULT.exp = 1; RESULT.dec = RESULT.valor;  :}
+// ;
+
+// D::= CEROO:a  {:  RESULT = new Node(); RESULT.valor = Integer.valueOf(a.toString()); :}
+//     | UNNO:a {:    RESULT = new Node(); RESULT.valor = Integer.valueOf(a.toString()); :}	
+//     ;
+
+
+
+// 1101 13
+
+
+        //    algo
+// otroEnt::=   ENTERO:num COLON{: RESULT =  new Node(); RESULT.valor = num; RESULT.isAscen = true; System.out.println(num.toString()); :} otroEnt:otro 
+//     {: 
+//         RESULT.isAscen = otro.isAscen;
+//         int algo1 = Integer.parseInt(num.toString());
+//         int algo2 = Integer.parseInt(otro.valor.toString());
+
+//         if(algo1 > algo2){
+//             RESULT.isAscen = false;
+//         }
+//     :}
+
+//         | ENTERO:num  {: RESULT =  new Node(); RESULT.valor = num; RESULT.isAscen = true; System.out.println("vacia"); :}
+//            ;
+
+
+
+ 
+
+//FUNCIONA 2
+// otroEnt::=   ENTERO:num COLON{: RESULT =  new Node(); RESULT.valor = num; RESULT.isAscen = true; System.out.println(num.toString()); :} otroEnt:otro 
+//     {: 
+//         RESULT.isAscen = otro.isAscen;
+//         int algo1 = Integer.parseInt(num.toString());
+//         int algo2 = Integer.parseInt(otro.valor.toString());
+
+//         if(algo1 > algo2){
+//             RESULT.isAscen = false;
+//         }
+//     :}
+
+//         | ENTERO:num  {: RESULT =  new Node(); RESULT.valor = num; RESULT.isAscen = true; System.out.println("vacia"); :}
+//            ;
+
+
+
+
+
+// ALGO::=   ENTERO:inn {: RESULT = new Node(); RESULT.valor = inn; System.out.println(inn.toString()); :} otroEnt:a
+// {: 
+//         RESULT.isAscen = a.isAscen;
+//         int algo1 = Integer.parseInt(inn.toString());
+//         int algo2 = Integer.parseInt(a.valor.toString());
+
+//         if(algo1 > algo2){
+//             RESULT.isAscen = false;
+//         }
+//     :}  
+// ;
+
+// otroEnt::=  COLON ENTERO:num {: RESULT =  new Node(); RESULT.valor = num; System.out.println(num.toString()); :} otroEnt:otro 
+//     {: 
+//         RESULT.isAscen = otro.isAscen;
+//         int algo1 = Integer.parseInt(num.toString());
+//         int algo2 = Integer.parseInt(otro.valor.toString());
+
+//         if(algo1 > algo2){
+//             RESULT.isAscen = false;
+//         }
+//     :}
+//         |  {: RESULT =  new Node(); RESULT.valor = 9999999; RESULT.isAscen = true; System.out.println("vacia"); :}
+//            ;
+
+
+
+
